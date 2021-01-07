@@ -12,7 +12,7 @@ class Sequential_searching{
         for(int i = 0; i < N; i++){
             array[i] = scanner.next();
         }
-        test model = new test();
+        Sequential_searching model = new Sequential_searching();
         int result = model.sequential_search(N,target,array);
         System.out.println(result);
         scanner.close();
