@@ -1,4 +1,4 @@
-public class quick_sort {
+class quick_sort {
     public static void main(String[] args){
         int[] array = {7,5,9,0,3,1,6,2,4,8};
         quick_sort QS = new quick_sort();

@@ -1,4 +1,4 @@
-public class count_sort{
+class count_sort{
     public static void main(String[] args){
         int[] array = {7,5,9,0,3,1,6,2,9,1,4,8,0,5,2};
         int[] count = new int[array.length];
