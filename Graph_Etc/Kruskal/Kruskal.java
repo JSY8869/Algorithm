@@ -1,36 +1,54 @@
 import java.util.*;
 
+class Edge implements Comparable<Edge> {
+
+    private int distance;
+    private int nodeA;
+    private int nodeB;
+
+    public Edge(int distance, int nodeA, int nodeB) {
+        this.distance = distance;
+        this.nodeA = nodeA;
+        this.nodeB = nodeB;
+    }
+
+    public int getDistance() {
+        return this.distance;
+    }
+
+    public int getNodeA() {
+        return this.nodeA;
+    }
+
+    public int getNodeB() {
+        return this.nodeB;
+    }
+
+    @Override
+    public int compareTo(Edge other) {
+        if (this.distance < other.distance) {
+            return -1;
+        }
+        return 1;
+    }
+}
+
 public class Kruskal {
     public static int v, e;
-    public static int[] indegree = new int[10000];
-    public static ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+    public static int[] parent = new int[10000];
+    public static ArrayList<Edge> edges = new ArrayList<>();
+    public static int result = 0;
 
-    public static void TopologySort() {
-        ArrayList<Integer> result = new ArrayList<>();
-        Queue<Integer> q = new LinkedList<>();
+    public static int findParent(int x) {
+        if (x == parent[x]) return x;
+        return parent[x] = findParent(parent[x]);
+    }
 
-        for (int i = 1; i <= v; i++) {
-            if (indegree[i] == 0) {
-                q.offer(i);
-            }
-        }
-
-        while (!q.isEmpty()) {
-            int now = q.poll();
-            result.add(now);
-
-            for (int i = 0; i < graph.get(now).size(); i++) {
-                indegree[graph.get(now).get(i)] -= 1;
-
-                if (indegree[graph.get(now).get(i)] == 0) {
-                    q.offer(graph.get(now).get(i));
-                }
-            }
-        }
-
-        for (int i = 0; i < result.size(); i++) {
-            System.out.print(result.get(i) + " ");
-        }
+    public static void unionParent(int a, int b) {
+        a = findParent(a);
+        b = findParent(b);
+        if (a < b) parent[b] = a;
+        else parent[a] = b;
     }
 
     public static void main(String[] args) {
@@ -39,17 +57,29 @@ public class Kruskal {
         v = sc.nextInt();
         e = sc.nextInt();
 
-        for (int i = 0; i <= v; i++) {
-            graph.add(new ArrayList<Integer>());
+        for (int i = 1; i <= v; i++) {
+            parent[i] = i;
         }
 
         for (int i = 0; i < e; i++) {
             int a = sc.nextInt();
             int b = sc.nextInt();
-            graph.get(a).add(b);
-            indegree[b] += 1;
+            int cost = sc.nextInt();
+            edges.add(new Edge(cost, a, b));
         }
 
-        TopologySort();
+        Collections.sort(edges);
+
+        for (int i = 0; i < edges.size(); i++) {
+            int cost = edges.get(i).getDistance();
+            int a = edges.get(i).getNodeA();
+            int b = edges.get(i).getNodeB();
+            if (findParent(a) != findParent(b)) {
+                unionParent(a, b);
+                result += cost;
+            }
+        }
+
+        System.out.println(result);
     }
 }
